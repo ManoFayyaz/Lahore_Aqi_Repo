@@ -24,12 +24,12 @@ jobs:
 
       - name: Upload to Feature Store
         env:
-          HOPSWORKS_API_KEY: ${{ RI6aVh8JRlgiuVaz.bGgoZw1u0Lf54YkBoZyivKakNFHWMHcQE3z5hCk4GOpTbHKf7jHLol2cXmSfZSMC}}
+          HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY}}
         run: python feature_store.py
 
       - name: Create Training Dataset
         env:
-          HOPSWORKS_API_KEY: ${{ RI6aVh8JRlgiuVaz.bGgoZw1u0Lf54YkBoZyivKakNFHWMHcQE3z5hCk4GOpTbHKf7jHLol2cXmSfZSMC }}
+          HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
         run: python training_data.py
 
       - name: 📤 Commit Hopsworks
