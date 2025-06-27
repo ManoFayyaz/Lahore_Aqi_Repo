@@ -3,8 +3,10 @@ name: Collect AQI Data
 on:
   schedule:
     - cron: '0 5 * * *'  # Runs daily at 10:00 AM PKT (5:00 UTC)
-  workflow_dispatch:      # Allows manual triggering
-
+  workflow_dispatch:    
+  # Allows manual triggering
+permissions:
+  contents:write
 jobs:
   run-script:
     runs-on: ubuntu-latest
@@ -23,3 +25,11 @@ jobs:
 
     - name: Run collect_data.py
       run: python lahore_aqi_data.py
+
+    - name: 📤 Commit Updated CSVs
+      run: |
+        git config user.name "ManoFayyaz"
+        git config user.email "mehnoorfayyaz06@gmail.com"
+        git add lahore_aqi_data.csv
+        git commit -m "Auto: Updated AQI and Features Data" || echo "No changes to commit"
+        git push origin master  # or 'main' depending on your branch
