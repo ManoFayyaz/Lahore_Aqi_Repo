@@ -25,7 +25,7 @@ jobs:
       - name: Upload to Feature Store
         env:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY}}
-        run: python feature_store.py
+        run: python feature_group.py
 
       - name: Create Training Dataset
         env:
