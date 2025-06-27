@@ -1,4 +1,4 @@
-name: Lahore AQI Data Collection Pipeline
+name: Lahore AQI ML Pipeline
 
 on:
   schedule:
@@ -27,15 +27,15 @@ jobs:
         pip install -r requirements.txt
 
     - name: 🏙️ Collect AQI Data
-      run: python collect_data.py
+      run: python lahore_aqi_data.py
 
     - name: 🧠 Generate Features
-      run: python generate_features.py
+      run: python lahore_aqi_features.py
 
     - name: 📤 Commit Updated CSVs
       run: |
         git config user.name "ManoFayyaz"
         git config user.email "mehnoorfayyaz06@gmail.com"
-        git add lahore_aqi_data.csv 
-        git commit -m "Auto: Updated AQI Data" || echo "No changes to commit"
+        git add lahore_aqi_data.csv lahore_aqi_features.csv
+        git commit -m "Auto: Updated AQI Data and Features" || echo "No changes to commit"
         git push origin master  # use main if your branch is named 'main'
