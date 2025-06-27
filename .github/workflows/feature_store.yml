@@ -1,0 +1,39 @@
+name: AQI Feature Store Pipeline
+
+on:
+  schedule:
+     - cron: '10 5 * * *'  # Runs daily at 10:10 AM PKT
+  workflow_dispatch:
+
+jobs:
+  update-feature-store:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install hopsworks pandas
+
+      - name: Upload to Feature Store
+        env:
+          HOPSWORKS_API_KEY: ${{ RI6aVh8JRlgiuVaz.bGgoZw1u0Lf54YkBoZyivKakNFHWMHcQE3z5hCk4GOpTbHKf7jHLol2cXmSfZSMC}}
+        run: python feature_store.py
+
+      - name: Create Training Dataset
+        env:
+          HOPSWORKS_API_KEY: ${{ RI6aVh8JRlgiuVaz.bGgoZw1u0Lf54YkBoZyivKakNFHWMHcQE3z5hCk4GOpTbHKf7jHLol2cXmSfZSMC }}
+        run: python training_data.py
+
+      - name: 📤 Commit Hopsworks
+        run: |
+            git config user.name "ManoFayyaz"
+            git config user.email "mehnoorfayyaz06@gmail.com"
+            git push origin master  # or 'main' if you're using main
