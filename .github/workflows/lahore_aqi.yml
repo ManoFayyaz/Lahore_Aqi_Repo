@@ -2,7 +2,7 @@ name: Lahore AQI ML Pipeline
 
 on:
   schedule:
-    - cron: '0 5 * * *'  # 10 AM Pakistan time
+    - cron: '0 * * * *'   # Every hour
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,7 @@ jobs:
       run: python lahore_aqi_data.py
 
     - name: 🧠 Generate Features
-      run: python lahore_aqi_features.py
+      run: python compute_features.py
 
     - name: 📤 Commit Updated CSVs
       run: |
