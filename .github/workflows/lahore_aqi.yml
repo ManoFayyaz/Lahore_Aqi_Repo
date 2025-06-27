@@ -1,0 +1,25 @@
+name: Collect AQI Data
+
+on:
+  schedule:
+    - cron: '0 5 * * *'  # Runs daily at 10:00 AM PKT (5:00 UTC)
+  workflow_dispatch:      # Allows manual triggering
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install requests
+
+    - name: Run collect_data.py
+      run: python lahore_aqi_data.py

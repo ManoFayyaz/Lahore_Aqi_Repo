@@ -1,0 +1,25 @@
+name: Generate Features from AQI Data
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Runs daily at 11:00 AM PKT (6:00 UTC)
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install pandas
+
+    - name: Run generate_features.py
+      run: python lahore_aqi_features.py
