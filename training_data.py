@@ -2,7 +2,7 @@ import feature_store as fs
 import hopsworks
 import os
 
-api_key = os.getenv("RI6aVh8JRlgiuVaz.bGgoZw1u0Lf54YkBoZyivKakNFHWMHcQE3z5hCk4GOpTbHKf7jHLol2cXmSfZSMC")
+api_key = os.getenv("HOPSWORKS_API_KEY")
 project = hopsworks.login(api_key_value=api_key)
 feature_view = fs.get_feature_view(name="lahore_aqi_data_view", version=1)
 
