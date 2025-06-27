@@ -30,6 +30,6 @@ jobs:
       run: |
         git config user.name "ManoFayyaz"
         git config user.email "mehnoorfayyaz06@gmail.com"
-        git add lahore_aqi_features.csv lahore_aqi_features.csv
+        git add lahore_aqi_features.csv 
         git commit -m "Auto: Updated AQI and Features Data" || echo "No changes to commit"
         git push origin master  # or 'main' depending on your branch
