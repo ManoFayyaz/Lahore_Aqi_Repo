@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 # Step 1: Login using API key
-api_key = os.getenv("RI6aVh8JRlgiuVaz.bGgoZw1u0Lf54YkBoZyivKakNFHWMHcQE3z5hCk4GOpTbHKf7jHLol2cXmSfZSMC")
+api_key = os.getenv("HOPSWORKS_API_KEY")
 project = hopsworks.login(api_key_value=api_key)
 fs = project.get_feature_store()
 
