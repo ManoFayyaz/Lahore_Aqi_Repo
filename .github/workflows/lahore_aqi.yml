@@ -1,35 +1,41 @@
-name: Collect AQI Data
+name: Lahore AQI Data Collection Pipeline
 
 on:
   schedule:
-    - cron: '0 5 * * *'  # Runs daily at 10:00 AM PKT (5:00 UTC)
-  workflow_dispatch:    
-  # Allows manual triggering
+    - cron: '0 5 * * *'  # 10 AM Pakistan time
+  workflow_dispatch:
+
 permissions:
-  contents:write
+  contents: write
+
 jobs:
-  run-script:
+  build-and-run:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
+    - name: 📦 Checkout Repository
       uses: actions/checkout@v3
 
-    - name: Set up Python
+    - name: 🐍 Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.x'
 
-    - name: Install dependencies
-      run: pip install requests
+    - name: 📥 Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-    - name: Run collect_data.py
-      run: python lahore_aqi_data.py
+    - name: 🏙️ Collect AQI Data
+      run: python collect_data.py
+
+    - name: 🧠 Generate Features
+      run: python generate_features.py
 
     - name: 📤 Commit Updated CSVs
       run: |
         git config user.name "ManoFayyaz"
         git config user.email "mehnoorfayyaz06@gmail.com"
-        git add lahore_aqi_data.csv
-        git commit -m "Auto: Updated AQI and Features Data" || echo "No changes to commit"
-        git push origin master  # or 'main' depending on your branch
+        git add lahore_aqi_data.csv 
+        git commit -m "Auto: Updated AQI Data" || echo "No changes to commit"
+        git push origin master  # use main if your branch is named 'main'
