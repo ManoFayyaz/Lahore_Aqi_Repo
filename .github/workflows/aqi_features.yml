@@ -4,7 +4,9 @@ on:
   schedule:
     - cron: '0 6 * * *'  # Runs daily at 11:00 AM PKT (6:00 UTC)
   workflow_dispatch:
-
+  
+permissions:
+  contents: write
 jobs:
   run-script:
     runs-on: ubuntu-latest
@@ -23,3 +25,11 @@ jobs:
 
     - name: Run generate_features.py
       run: python lahore_aqi_features.py
+
+    - name: 📤 Commit Updated CSVs
+      run: |
+        git config user.name "ManoFayyaz"
+        git config user.email "mehnoorfayyaz06@gmail.com"
+        git add lahore_aqi_features.csv lahore_aqi_features.csv
+        git commit -m "Auto: Updated AQI and Features Data" || echo "No changes to commit"
+        git push origin master  # or 'main' depending on your branch
