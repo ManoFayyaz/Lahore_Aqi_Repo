@@ -1,6 +1,6 @@
-import feature_store as fs
 import hopsworks
 import os
+import feature_store as fs
 
 api_key = os.getenv("HOPSWORKS_API_KEY")
 project = hopsworks.login(api_key_value=api_key)
