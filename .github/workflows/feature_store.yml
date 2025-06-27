@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install hopsworks pandas
+            pip install pandas "hopsworks[python]"
 
       - name: Upload to Feature Store
         env:
