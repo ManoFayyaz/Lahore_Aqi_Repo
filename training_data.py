@@ -1,10 +1,12 @@
 import hopsworks
+import pandas as pd
 import os
-import feature_store as fs
 
-api_key = os.getenv("HOPSWORKS_API_KEY")
-project = hopsworks.login(api_key_value=api_key)
-feature_view = fs.get_feature_view(name="lahore_aqi_data_view", version=1)
+
+project=hopsworks.login(api_key_value="secrets.HOPSWORKS_API_KEY")
+fs=project.get_feature_store()
+
+feature_view = fs.get_feature_view(name="lahore_aqi_view", version=1)
 
 job = feature_view.create_training_data(
     description="Training dataset for Lahore AQI",
