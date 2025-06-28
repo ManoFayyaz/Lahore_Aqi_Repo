@@ -3,4 +3,9 @@ requests
 hopsworks
 pyarrow
 confluent-kafka
+scikit-learn
+pandas
+numpy
+tensorflow
+joblib
 
