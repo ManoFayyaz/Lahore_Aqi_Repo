@@ -39,7 +39,13 @@ jobs:
         env:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
         run: python training_data.py
-        
+
+
+      - name: Train and Register Model
+        env:
+          HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
+        run: python train_models.py
+              
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
