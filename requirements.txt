@@ -1,5 +1,6 @@
 pandas
 requests
-hopsworks[python]
+hopsworks
+pyarrow
 confluent-kafka
 
