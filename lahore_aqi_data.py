@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 
 # Your API key and URL
-api_key = "c80b5ffb-d106-4bac-8b41-2d2d660f0d91"
+api_key = "IQAIR_API_KEY"
 url = f"https://api.airvisual.com/v2/city?city=Lahore&state=Punjab&country=Pakistan&key={api_key}"
 
 # Send request to API
