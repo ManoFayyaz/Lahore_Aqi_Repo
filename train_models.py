@@ -149,17 +149,37 @@ project = hopsworks.login(
 )
 mr = project.get_model_registry()
 
-# Save model locally
-model_dir = "ridge_model"
+# 📁 Save best model to local directory
+model_dir = "best_model"
 os.makedirs(model_dir, exist_ok=True)
-joblib.dump(ridge_model, f"{model_dir}/ridge_model.pkl")
 
-# Register a new version of the same model
-new_model = mr.python.create_model(
+if best_model_name == "TensorFlow":
+    model_path = os.path.join(model_dir, "model.keras")
+    best_model.save(model_path)
+else:
+    model_path = os.path.join(model_dir, "model.pkl")
+    joblib.dump(best_model, model_path)
+
+# 📊 Recalculate metrics for best model
+if best_model_name == "RandomForest":
+    preds = rf_model.predict(X_test)
+elif best_model_name == "Ridge":
+    preds = ridge_model.predict(X_test_scaled)
+else:
+    preds = tf_model.predict(X_test_scaled).flatten()
+
+rmse = np.sqrt(mean_squared_error(y_test, preds))
+mae = mean_absolute_error(y_test, preds)
+r2 = r2_score(y_test, preds)
+
+# 🗂️ Register model as `"ridge_aqi_model"` (name is fixed)
+model = mr.python.create_model(
     name="ridge_aqi_model",
-    metrics={"rmse": 1.02, "mae": 0.88, "r2": 0.87},
-    description="Updated Ridge regression model for AQI prediction"
+    metrics={"rmse": rmse, "mae": mae, "r2": r2},
+    description=f"Best model auto-selected: {best_model_name}"
 )
 
-new_model.save(os.path.abspath(model_dir))
+# 📤 Upload to model registry
+model.save(os.path.abspath(model_path))
 
+print(f"✅ Model '{best_model_name}' registered as 'ridge_aqi_model' with R² = {r2:.2f}")
