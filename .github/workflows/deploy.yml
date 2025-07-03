@@ -18,9 +18,11 @@ jobs:
         git config --global user.email "mehnoorfayyaz06@gmail.com"
         git config --global user.name "Menoor00"
 
-    - name: Push to Hugging Face Space
+    - name: Push to Hugging Face
       env:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}
       run: |
-        git remote add hf https://${HF_TOKEN}@huggingface.co/spaces/Mehnoor00/AQI_Webapp
+        git config --global user.email "mehnoorfayyaz06@gmail.com"
+        git config --global user.name "Mehnoor00"
+        git remote add hf https://Mehnoor00:${HF_TOKEN}@huggingface.co/spaces/Mehnoor00/AQI_Webapp
         git push hf master:main --force
