@@ -11,7 +11,7 @@ df['dayofweek'] = df['timestamp'].dt.dayofweek
 df['target_aqi'] = df['aqius'].shift(-1)
 
 # Drop rows with any missing values
-#df = df.dropna()
+df = df.dropna()
 
 # Save to new CSV
 df.to_csv("lahore_aqi_features.csv", index=False)
