@@ -12,6 +12,14 @@ df = pd.read_csv("lahore_aqi_features.csv")
 #Drop rows with any null values
 df = df.dropna()
 
+df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+
+# Drop rows where timestamp is invalid or any column is null
+df.dropna(subset=["timestamp"], inplace=True)
+
+# ✅ Optional: sort by time
+df.sort_values("timestamp", inplace=True)
+
 # Step 3: Create or get feature group
 fg = fs.get_or_create_feature_group(
     name="lahore_aqi_group",
