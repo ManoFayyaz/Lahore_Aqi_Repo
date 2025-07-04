@@ -19,6 +19,7 @@ df.dropna(subset=["timestamp"], inplace=True)
 
 # ✅ Optional: sort by time
 df.sort_values("timestamp", inplace=True)
+df['main_pollutant'] = df['main_pollutant'].astype(str)
 
 # Step 3: Create or get feature group
 fg = fs.get_or_create_feature_group(
