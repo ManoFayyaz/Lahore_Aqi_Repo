@@ -9,6 +9,8 @@ fs = project.get_feature_store()
 
 # Step 2: Read full daily CSV
 df = pd.read_csv("lahore_aqi_features.csv")
+#Drop rows with any null values
+df = df.dropna()
 
 # Step 3: Create or get feature group
 fg = fs.get_or_create_feature_group(
