@@ -16,6 +16,7 @@ df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
 
 # Drop rows where timestamp is invalid or any column is null
 df.dropna(subset=["timestamp"], inplace=True)
+df.dropna(inplace=True)
 
 # ✅ Optional: sort by time
 df.sort_values("timestamp", inplace=True)
