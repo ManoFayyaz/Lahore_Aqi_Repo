@@ -1,1 +1,1 @@
-timestamp,aqius,main_pollutant,temperature,humidity,wind_speed,aqi,pm2_5,pm10,no2,so2,co,no,o3,nh3
+timestamp,aqius,main_pollutant,temperature,humidity,wind_speed,aqi,pm2_5,pm10,no2,so2,co,no,o3,nh3,hour,dayofweek,target_aqi
