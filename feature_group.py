@@ -20,6 +20,12 @@ df.dropna(inplace=True)
 
 # ✅ Optional: sort by time
 df.sort_values("timestamp", inplace=True)
+
+df['main_pollutant'].replace('', pd.NA, inplace=True)
+df['main_pollutant'] = df['main_pollutant'].str.strip()
+df.dropna(subset=['main_pollutant'], inplace=True)
+
+# Convert to string to ensure clean dtype
 df['main_pollutant'] = df['main_pollutant'].astype(str)
 
 # Step 3: Create or get feature group
