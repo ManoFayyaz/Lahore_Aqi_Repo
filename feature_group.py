@@ -4,12 +4,12 @@ import numpy as np
 import os
 
 # Step 1: Login using API key
-api_key = "RI6aVh8JRlgiuVaz.bGgoZw1u0Lf54YkBoZyivKakNFHWMHcQE3z5hCk4GOpTbHKf7jHLol2cXmSfZSMC"
+api_key = os.getenv("HOPSWORKS_API_KEY")
 project = hopsworks.login(api_key_value=api_key)
 fs = project.get_feature_store()
 
 # Step 2: Load and clean CSV
-df = pd.read_csv("/content/lahore_aqi_features.csv")
+df = pd.read_csv("lahore_aqi_features.csv")
 
 # Convert timestamp to datetime format
 df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
