@@ -4,12 +4,12 @@ import numpy as np
 import os
 
 # Step 1: Login using API key
-api_key = os.getenv("HOPSWORKS_API_KEY")
+api_key = "RI6aVh8JRlgiuVaz.bGgoZw1u0Lf54YkBoZyivKakNFHWMHcQE3z5hCk4GOpTbHKf7jHLol2cXmSfZSMC"
 project = hopsworks.login(api_key_value=api_key)
 fs = project.get_feature_store()
 
 # Step 2: Load and clean CSV
-df = pd.read_csv("lahore_aqi_features.csv")
+df = pd.read_csv("/content/lahore_aqi_features.csv")
 
 # Convert timestamp to datetime format
 df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
@@ -22,7 +22,7 @@ df['main_pollutant'] = df['main_pollutant'].astype(str).str.strip().replace("", 
 df.dropna(subset=["main_pollutant"], inplace=True)
 
 # Drop any rows with other nulls
-df.dropna(inplace=True)
+#df.dropna(inplace=True)
 
 # Sort by timestamp (optional but good practice)
 df.sort_values("timestamp", inplace=True)
@@ -48,15 +48,19 @@ df = df.astype({
     "target_aqi": "float64"
 })
 
+print("Shape of data before insert:", df.shape)
+
+
 # Step 3: Create or get feature group
 fg = fs.get_or_create_feature_group(
     name="lahore_aqi_group",
     version=1,
     primary_key=["timestamp"],
-    description="Lahore AQI daily updated dataset"
+    description="Lahore AQI daily updated dataset",
+    event_time="timestamp" 
 )
 
 # Step 4: Insert cleaned data
-fg.insert(df, write_options={"wait_for_job": True, "overwrite": True})
+fg.insert(df, write_options={"wait_for_job": True})  # Don't overwrite
 
-print("✅ Feature group updated successfully!")
+print("Feature group updated successfully!")
