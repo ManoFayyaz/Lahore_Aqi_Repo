@@ -40,10 +40,10 @@ jobs:
         #      HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY}}
         #run: python feature_view.py
         
-      - name: Create Training Dataset
-        env:
-          HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
-        run: python training_data.py
+      #- name: Create Training Dataset
+       # env:
+         # HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
+        #run: python training_data.py
 
      
 
