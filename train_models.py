@@ -77,3 +77,26 @@ best_model, best_metrics, is_scaled = valid_models[best_model_name]
 
 print(f"Best model: {best_model_name}")
 print(f"Metrics: {best_metrics}")
+
+
+model_dir = "best_model"
+os.makedirs(model_dir, exist_ok=True)
+
+if best_model_name == "Ridge":
+    joblib.dump(best_model, os.path.join(model_dir, "model.pkl"))
+    model_path = os.path.join(model_dir, "model.pkl")
+else:
+    joblib.dump(best_model, os.path.join(model_dir, "model.pkl"))
+    model_path = os.path.join(model_dir, "model.pkl")
+
+# Upload to model registry
+mr = project.get_model_registry()
+
+model = mr.python.create_model(
+    name="pm25_prediction_model",
+    metrics=best_metrics,
+    description=f"Best model for predicting PM2.5: {best_model_name}"
+)
+
+model.save(os.path.abspath(model_path))
+print("✅ Model uploaded to registry.")
