@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.preprocessing import StandardScaler
-
+import os
 
 api_key = os.getenv("HOPSWORKS_API_KEY")
 project = hopsworks.login(api_key_value=api_key)
