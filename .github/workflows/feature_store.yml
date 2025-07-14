@@ -35,7 +35,6 @@ jobs:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY}}
         run: python feature_group.py
         
-
       - name: Train and Register Model
         env:
            HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
