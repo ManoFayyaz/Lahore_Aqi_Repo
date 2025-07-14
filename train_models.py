@@ -8,11 +8,9 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.preprocessing import StandardScaler
 
 
-project = hopsworks.login(
-    api_key_value="RI6aVh8JRlgiuVaz.bGgoZw1u0Lf54YkBoZyivKakNFHWMHcQE3z5hCk4GOpTbHKf7jHLol2cXmSfZSMC",  # Replace with your real API key or use environment variable
-    project="Lahore_aqi"
-)
-fs = project.get_feature_store()
+api_key = os.getenv("HOPSWORKS_API_KEY")
+project = hopsworks.login(api_key_value=api_key)
+fs=project.get_feature_store()
 
 fg = fs.get_feature_group(name="lahore_aqi_group", version=1)
 df= fg.select_all().read()
