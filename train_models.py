@@ -23,18 +23,9 @@ df.dropna(subset=["target_aqi"], inplace=True)
 df.dropna(axis=1, how='all', inplace=True)
 
 X=df[['so2', 'temperature', 'no', 'o3', 'humidity']]
-y=df[['pm2_5']]
+y=df[['aqius']]
 
-# pm2.5 Imbalancement
-bins = [0, 12, 35.4, 55.4, 150.4, 250.4, float('inf')]
-labels = ['Good', 'Moderate', 'Unhealthy for Sensitive Groups', 'Unhealthy', 'Very Unhealthy', 'Hazardous']
-
-# Create a new column for binned categories
-df['pm2_5_bin'] = pd.cut(df['pm2_5'], bins=bins, labels=labels)
-
-y_bin = df['pm2_5_bin']
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42,stratify=y_bin)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
@@ -48,8 +39,8 @@ ridge_preds = ridge_model.predict(X_test_scaled)
 
 #RFG
 rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
-rf_model.fit(X_train, y_train)
-rf_preds = rf_model.predict(X_test)
+rf_model.fit(X_train_scaled, y_train)
+rf_preds = rf_model.predict(X_test_scaled)
 
 def evaluate(y_true, y_pred):
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
@@ -101,9 +92,9 @@ prediction_df.to_csv(prediction_path, index=False)
 # Upload model directory with both model and predictions
 mr = project.get_model_registry()
 model = mr.python.create_model(
-    name="pm25_prediction_model",
+    name="AQI_prediction_model",
     metrics=best_metrics,
-    description=f"Best model for predicting PM2.5: {best_model_name}"
+    description=f"Best model for predicting AQI: {best_model_name}"
 )
 model.save(os.path.abspath(model_dir))  # ✅ Save entire directory
 
