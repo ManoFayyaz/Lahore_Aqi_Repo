@@ -10,4 +10,4 @@ tensorflow
 joblib
 streamlit==1.26.0
 hopsworks==4.2.6
-prophet
+xgboost
