@@ -9,6 +9,22 @@ from sklearn.preprocessing import StandardScaler
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import joblib
+import hopsworks
+
+project = hopsworks.login(
+    api_key_value="RI6aVh8JRlgiuVaz.bGgoZw1u0Lf54YkBoZyivKakNFHWMHcQE3z5hCk4GOpTbHKf7jHLol2cXmSfZSMC",  # Replace with your real API key or use environment variable
+    project="Lahore_aqi"
+)
+fs = project.get_feature_store()
+
+fg = fs.get_feature_group(name="lahore_aqi_group", version=1)
+df= fg.select_all().read()
+
+df.dropna(subset=["target_aqi"], inplace=True)
+df.dropna(axis=1, how='all', inplace=True)
+
+X=df[['so2', 'temperature', 'no', 'o3', 'humidity']]
+y=df[['aqius']]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
