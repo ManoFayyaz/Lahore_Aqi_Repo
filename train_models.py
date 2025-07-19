@@ -1,4 +1,6 @@
 import numpy as np
+import os
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Ridge
@@ -6,7 +8,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-
+import joblib
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -62,3 +64,33 @@ best_model, best_metrics, is_scaled = valid_models[best_model_name]
 
 print(f"Best model: {best_model_name}")
 print(f"Metrics: {best_metrics}")
+
+
+# Save predictions as a CSV inside model_dir
+predictions = best_model.predict(X_test_scaled if is_scaled else X_test).flatten()
+prediction_df = pd.DataFrame(
+    np.column_stack((y_test.values, predictions)),
+    columns=["y_true", "y_pred"]
+)
+model_dir = "best_model"
+os.makedirs(model_dir, exist_ok=True)
+
+# Save model
+model_path = os.path.join(model_dir, "model.pkl")
+joblib.dump(best_model, model_path)
+
+#  Save predictions to same folder
+prediction_path = os.path.join(model_dir, "aqi_predictions.csv")
+prediction_df.to_csv(prediction_path, index=False)
+
+# Upload model directory with both model and predictions
+mr = project.get_model_registry()
+model = mr.python.create_model(
+    name="AQI_prediction_model",
+    metrics=best_metrics,
+    description=f"Best model for predicting AQI: {best_model_name}"
+)
+model.save(os.path.abspath(model_dir))  # ✅ Save entire directory
+
+print("✅ Model and predictions uploaded to registry.")
+
