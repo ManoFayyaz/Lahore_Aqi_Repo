@@ -80,30 +80,38 @@ best_model, best_metrics, is_scaled = valid_models[best_model_name]
 print(f"Best model: {best_model_name}")
 print(f"Metrics: {best_metrics}")
 
-#  Save predictions as a CSV inside model_dir
+# Predict and save predictions
 predictions = best_model.predict(X_test_scaled if is_scaled else X_test).flatten()
 prediction_df = pd.DataFrame(
     np.column_stack((y_test.values, predictions)),
     columns=["y_true", "y_pred"]
 )
+
+# Save input features used for prediction (needed for SHAP)
+feature_df = pd.DataFrame(X_test_scaled if is_scaled else X_test, columns=X.columns)
+
 model_dir = "best_model"
 os.makedirs(model_dir, exist_ok=True)
 
-# Save model
+#  Save model
 model_path = os.path.join(model_dir, "model.pkl")
 joblib.dump(best_model, model_path)
 
-#  Save predictions to same folder
+#  Save predictions
 prediction_path = os.path.join(model_dir, "predictions.csv")
 prediction_df.to_csv(prediction_path, index=False)
 
-# Upload model directory with both model and predictions
+# Save features for SHAP
+features_path = os.path.join(model_dir, "features.csv")
+feature_df.to_csv(features_path, index=False)
+
+#  Upload whole folder to Model Registry
 mr = project.get_model_registry()
 model = mr.python.create_model(
     name="AQI_prediction_model",
     metrics=best_metrics,
     description=f"Best model for predicting AQI: {best_model_name}"
 )
-model.save(os.path.abspath(model_dir))  #  Save entire directory
+model.save(os.path.abspath(model_dir))
 
-print(" Model and predictions uploaded to registry.")
+print(" Model, predictions, and input features uploaded to registry.")
