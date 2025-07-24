@@ -27,11 +27,11 @@ df['aqius_lag2'] = df['aqius'].shift(2)
 df['aqius_avg3'] = df['aqius'].rolling(window=3).mean()
 df = df.dropna()  # important for lags/rolling
 
-X=df[['so2', 'temperature', 'no', 'o3', 'humidity',"dayofweek","hour",'aqius_lag1', 'aqius_lag2', 'aqius_avg3']]
-y=df[['aqius']]
+# X=df[['so2', 'temperature', 'no', 'o3', 'humidity',"dayofweek","hour",'aqius_lag1', 'aqius_lag2', 'aqius_avg3']]
+# y=df[['aqius']]
 
-train=df.iloc[-144:-72]
-test=df.iloc[-72:]
+# train=df.iloc[-144:-72]
+# test=df.iloc[-72:]
 
 X_train=train[['so2', 'temperature', 'no', 'o3','wind_speed', 'humidity',"dayofweek","hour",'aqius_lag1', 'aqius_lag2', 'aqius_avg3']]
 y_train=train[['aqius']]
@@ -39,7 +39,7 @@ X_test=test[['so2', 'temperature', 'no', 'o3', 'wind_speed','humidity',"dayofwee
 y_test=test[['aqius']]
 
 # Train-Test Split
-X_train, X_test, y_train, y_test = train_test_split(X , y, test_size=0.2, random_state=42)
+# X_train, X_test, y_train, y_test = train_test_split(X , y, test_size=0.2, random_state=42)
 
 #  Scaling
 scaler = StandardScaler()
