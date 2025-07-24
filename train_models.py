@@ -30,8 +30,8 @@ df = df.dropna()  # important for lags/rolling
 # X=df[['so2', 'temperature', 'no', 'o3', 'humidity',"dayofweek","hour",'aqius_lag1', 'aqius_lag2', 'aqius_avg3']]
 # y=df[['aqius']]
 
-# train=df.iloc[-144:-72]
-# test=df.iloc[-72:]
+train=df.iloc[:-72, :]
+test=df.iloc[-72:]
 
 X_train=train[['so2', 'temperature', 'no', 'o3','wind_speed', 'humidity',"dayofweek","hour",'aqius_lag1', 'aqius_lag2', 'aqius_avg3']]
 y_train=train[['aqius']]
