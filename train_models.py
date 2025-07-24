@@ -27,7 +27,7 @@ df['aqius_lag2'] = df['aqius'].shift(2)
 df['aqius_avg3'] = df['aqius'].rolling(window=3).mean()
 df = df.dropna()  # important for lags/rolling
 
-X=df[['so2', 'temperature', 'no', 'o3', 'humidity',"dayofweek"]]
+X=df[['so2', 'temperature', 'no', 'o3', 'humidity',"dayofweek","hour",'aqius_lag1', 'aqius_lag2', 'aqius_avg3']]
 y=df[['aqius']]
 
 train=df.iloc[-144:-72]
