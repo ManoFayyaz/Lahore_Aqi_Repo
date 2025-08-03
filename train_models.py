@@ -30,7 +30,7 @@ df = df.dropna()
 train = df.iloc[:-72, :]
 test = df.iloc[-72:]
 
-features = ['so2', 'o3', 'hour', 'dayofweek', 'temperature', 'co', 'no', 'wind_speed', 'aqius_lag1', 'aqius_lag2', 'aqius_avg3']
+features = ['so2', 'o3', 'temperature', 'co', 'no', 'wind_speed', 'aqius_lag1', 'aqius_lag2', 'aqius_avg3']
 target = 'aqius'
 
 X_train = train[features]
