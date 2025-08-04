@@ -2,7 +2,7 @@ name: AQI Feature Store Pipeline
 
 on:
   schedule:
-     - cron:  '0 7 * * *'   # Runs daily at 12:00 PM (PKT)
+     - cron:  '10 14 * * *'  # Runs daily at 12:00 PM (PKT)
   workflow_dispatch:
   
 permissions:
