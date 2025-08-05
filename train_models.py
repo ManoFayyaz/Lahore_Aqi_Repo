@@ -15,6 +15,11 @@ fs = project.get_feature_store()
 fg = fs.get_feature_group(name="lahore_aqi_group", version=1)
 df = fg.select_all().read()
 
+#sorted timestamps
+df['timestamp'] = pd.to_datetime(df['timestamp'])
+df = df.sort_values("timestamp")
+df = df.reset_index(drop=True)
+
 # Preprocessing and Feature Engineering
 df.dropna(subset=["target_aqi"], inplace=True)
 df.dropna(axis=1, how='all', inplace=True)
