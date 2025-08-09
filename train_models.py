@@ -71,12 +71,13 @@ xgb_preds = xgb_model.predict(X_test_scaled)
 mse = mean_squared_error(y_test, xgb_preds)
 mae = mean_absolute_error(y_test, xgb_preds)
 r2 = r2_score(y_test, xgb_preds)
+rmse=np.sqrt(r2)
 
-print("Final Test Set Evaluation:")
-print("MSE :", mse)
-print("MAE :", mae)
-print("RMSE:", rmse)
-print("R2  :", r2)
+# print("Final Test Set Evaluation:")
+# print("MSE :", mse)
+# print("MAE :", mae)
+# print("RMSE:", rmse)
+# print("R2  :", r2)
 
 #US EPA Formula: AQI
 BP_high=None
