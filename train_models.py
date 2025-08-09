@@ -13,6 +13,7 @@ import os
 api_key = os.getenv("HOPSWORKS_API_KEY")
 project = hopsworks.login(api_key_value=api_key)
 fs = project.get_feature_store()
+fg = fs.get_feature_group(name="lahore_aqi_group", version=1)
 df = fg.select_all().read()
 
 # Preprocessing and Feature Engineering
