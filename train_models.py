@@ -21,20 +21,34 @@ df['timestamp'] = pd.to_datetime(df['timestamp'])
 df = df.sort_values("timestamp")
 df = df.reset_index(drop=True)
 
-# Preprocessing and Feature Engineering
+# Preprocessing 
 df.dropna(subset=["target_aqi"], inplace=True)
 df.dropna(axis=1, how='all', inplace=True)
 
+last_timestamp = df['timestamp'].max()
+
+# print(last_timestamp)
+
+# Feature Engineering
 df['pm2_5_lag1'] = df['pm2_5'].shift(1)
 df['pm2_5_lag2'] = df['pm2_5'].shift(2)
 df['pm2_5_avg3'] = df['pm2_5'].rolling(window=3).mean()
+df['pm2_5_avg7']  = df['pm2_5'].rolling(window=7).mean()   
+df['pm2_5_std7']  = df['pm2_5'].rolling(window=7).std()   
+df['pm2_5_avg14']  = df['pm2_5'].rolling(window=14).mean()   
+df['pm2_5_std14']  = df['pm2_5'].rolling(window=14).std() 
+df['pm2_5_max']=df['pm2_5'].rolling(window=7).max()  
+
 df = df.dropna()
 
-# Last 72 rows Test set (future data)
+df['month'] = df['timestamp'].dt.month
+df['dayofweek'] = df['timestamp'].dt.dayofweek
+
+# Last 72 rows = Test set (future data)
 train = df.iloc[:-72, :]
 test = df.iloc[-72:]
 
-features = ['temperature','no2', 'co', 'no', 'o3','pm2_5_lag1', 'pm2_5_lag2', 'pm2_5_avg3']
+features = ['temperature','no2', 'co', 'no', 'o3','humidity','pm2_5_lag1', 'pm2_5_lag2', 'pm2_5_avg3','pm2_5_avg7','pm2_5_std7','pm2_5_avg14','pm2_5_std14','pm2_5_max','dayofweek','month']
 target = 'pm2_5'
 
 X_train = train[features]
@@ -47,28 +61,8 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# TimeSeriesSplit Cross-Validation on Training Data
-# tscv = TimeSeriesSplit(n_splits=5)
-# fold = 1
-# r2_scores = []
-
-# for train_index, val_index in tscv.split(X_train_scaled):
-#     X_fold_train, X_fold_val = X_train_scaled[train_index], X_train_scaled[val_index]
-#     y_fold_train, y_fold_val = y_train.iloc[train_index], y_train.iloc[val_index]
-
-#     fold_model = XGBRegressor(n_estimators=500,max_depth=6,random_state=42)
-#     fold_model.fit(X_fold_train, y_fold_train)
-#     fold_preds = fold_model.predict(X_fold_val)
-
-#     r2 = r2_score(y_fold_val, fold_preds)
-#     r2_scores.append(r2)
-#     print(f"Fold {fold} R2 Score: {r2:.4f}")
-#     fold += 1
-
-# print(f"\nAverage CV R2 Score: {np.mean(r2_scores):.4f}")
-
-# Final Model Training on Full Training Set
-xgb_model =XGBRegressor(n_estimators=500,max_depth=6,random_state=42)
+# Final Model Training 
+xgb_model =XGBRegressor(n_estimators=200,max_depth=4,learning_rate=0.1,reg_alpha=0.2,reg_lambda=2.0,subsample=0.6,colsample_bytree=0.6,random_state=42)
 xgb_model.fit(X_train_scaled, y_train)
 xgb_preds = xgb_model.predict(X_test_scaled)
 
@@ -76,13 +70,14 @@ xgb_preds = xgb_model.predict(X_test_scaled)
 mse = mean_squared_error(y_test, xgb_preds)
 mae = mean_absolute_error(y_test, xgb_preds)
 r2 = r2_score(y_test, xgb_preds)
-rmse=np.sqrt(r2)
+rmse=np.sqrt(mse)
+mape = np.mean(np.abs((y_test - xgb_preds) / y_test)) * 100
 
-# print("Final Test Set Evaluation:")
 # print("MSE :", mse)
 # print("MAE :", mae)
 # print("RMSE:", rmse)
 # print("R2  :", r2)
+# print("MAPE Test: {:.2f}%".format(mape_test))
 
 #US EPA Formula: AQI
 BP_high=None
@@ -125,8 +120,11 @@ for i in xgb_preds:
   AQI=((AQI_high-AQI_low)*(i-BP_low))/(BP_high-BP_low)+AQI_low
   aqi.append(AQI)
 
+#creating future timestamps
+future_timestamps = pd.date_range(start=last_timestamp + pd.Timedelta(hours=1),periods=len(y_test),freq='H')
+
 # Save predictions, calculations & features
-prediction_df = pd.DataFrame({"actual":y_test.values,'predicted_pm2_5':xgb_preds,"calculated_aqi":aqi})
+prediction_df = pd.DataFrame({"timestamp": future_timestamps,"actual":y_test.values,'predicted_pm2_5':xgb_preds,"calculated_aqi":aqi})
 prediction_df.to_csv("prediction.csv", index=False)
 X_test.to_csv("features.csv", index=False)
 
@@ -145,9 +143,8 @@ X_test.to_csv(os.path.join(model_dir, "features.csv"), index=False)
 mr = project.get_model_registry()
 model = mr.python.create_model(
     name="AQI_prediction_model",
-    metrics={"mae": mae, "mse": mse, "rmse": rmse, "r2": r2},
+    metrics={"mae": mae, "mse": mse, "rmse": rmse, "r2": r2,"mape":mape},
     description="PM2.5 predictions and Calculated AQI"
 )
 model.save(os.path.abspath(model_dir))
-
 print("Model, predictions, features, and metrics uploaded to registry.")
