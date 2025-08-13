@@ -21,50 +21,51 @@ df['timestamp'] = pd.to_datetime(df['timestamp'])
 df = df.sort_values("timestamp")
 df = df.reset_index(drop=True)
 
-# Preprocessing 
+# Preprocessing
 df.dropna(subset=["target_aqi"], inplace=True)
 df.dropna(axis=1, how='all', inplace=True)
 
-last_timestamp = df['timestamp'].max()
+# print(df.shape)
 
-# print(last_timestamp)
+# last_timestamp = df['timestamp'].max()
 
-# Feature Engineering
 df['pm2_5_lag1'] = df['pm2_5'].shift(1)
 df['pm2_5_lag2'] = df['pm2_5'].shift(2)
 df['pm2_5_avg3'] = df['pm2_5'].rolling(window=3).mean()
-df['pm2_5_avg7']  = df['pm2_5'].rolling(window=7).mean()   
-df['pm2_5_std7']  = df['pm2_5'].rolling(window=7).std()   
-df['pm2_5_avg14']  = df['pm2_5'].rolling(window=14).mean()   
-df['pm2_5_std14']  = df['pm2_5'].rolling(window=14).std() 
-df['pm2_5_max']=df['pm2_5'].rolling(window=7).max()  
+df['pm2_5_avg7'] = df['pm2_5'].rolling(window=7).mean()
+df['pm2_5_std7'] = df['pm2_5'].rolling(window=7).std()
+df['pm2_5_max'] = df['pm2_5'].rolling(window=7).max()
+
+# date features
+df['month'] = df['timestamp'].dt.month
+# df['dayofweek'] = df['timestamp'].dt.dayofweek
 
 df = df.dropna()
 
-df['month'] = df['timestamp'].dt.month
-df['dayofweek'] = df['timestamp'].dt.dayofweek
+# Split into train/test
+train_df = df.iloc[:-72].copy()
+test_df = df.iloc[-72:].copy()
 
-# Last 72 rows = Test set (future data)
-train = df.iloc[:-72, :]
-test = df.iloc[-72:]
-
-features = ['temperature','no2', 'co', 'no', 'o3','humidity','pm2_5_lag1', 'pm2_5_lag2', 'pm2_5_avg3','pm2_5_avg7','pm2_5_std7','pm2_5_avg14','pm2_5_std14','pm2_5_max','dayofweek','month']
+# Define features/target
+features = ['temperature','no2','co','no','o3','humidity','pm2_5_lag1','pm2_5_lag2','pm2_5_avg3','pm2_5_avg7','pm2_5_std7','pm2_5_max','month']
 target = 'pm2_5'
 
-X_train = train[features]
-y_train = train[target]
-X_test = test[features]
-y_test = test[target]
+X_train = train_df[features]
+y_train = train_df[target]
+X_test = test_df[features]
+y_test = test_df[target]
 
-# Scale features
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
 
-# Final Model Training 
-xgb_model =XGBRegressor(n_estimators=200,max_depth=4,learning_rate=0.1,reg_alpha=0.2,reg_lambda=2.0,subsample=0.6,colsample_bytree=0.6,random_state=42)
-xgb_model.fit(X_train_scaled, y_train)
-xgb_preds = xgb_model.predict(X_test_scaled)
+# Final Model Training
+xgb_model =XGBRegressor(n_estimators=200,max_depth=2,learning_rate=0.1,reg_alpha=0.2,reg_lambda=2.0,subsample=0.6,colsample_bytree=0.6,min_child_weight=7,random_state=42)
+xgb_model.fit(X_train, y_train)
+xgb_preds = xgb_model.predict(X_test)
+
+# print("Train shape:", train_df.shape)
+# print("Test shape:", test_df.shape)
+# print("X_train:", X_train.shape, "X_test:", X_test.shape)
+# print("y_train:", y_train.shape, "y_test:", y_test.shape)
+
 
 # Evaluate Final Test Set
 mse = mean_squared_error(y_test, xgb_preds)
@@ -77,7 +78,7 @@ mape = np.mean(np.abs((y_test - xgb_preds) / y_test)) * 100
 # print("MAE :", mae)
 # print("RMSE:", rmse)
 # print("R2  :", r2)
-# print("MAPE Test: {:.2f}%".format(mape_test))
+# print("MAPE Test: {:.2f}%".format(mape))
 
 #US EPA Formula: AQI
 BP_high=None
@@ -87,41 +88,52 @@ AQI_low=None
 aqi=[]
 
 for i in xgb_preds:
-  if i>=0.0 and i<= 9.0:
+  if i>=0.0 and i<= 12.0:
       BP_low=0.0
-      BP_high=9.0
+      BP_high=12.0
       AQI_low=0
       AQI_high=50
-  elif i>=9.1 and i<=35.4:
-      BP_low=9.1
+  elif i>=12.1 and i<=35.4:
+      BP_low=12.1
       BP_high=35.4
       AQI_low=51
       AQI_high=100
   elif i>=35.5 and i<=55.4:
-      BP_low=35
+      BP_low=35.5
       BP_high=55.4
       AQI_low=101
       AQI_high=150
-  elif i>=55.5 and i<=125.4:
+  elif i>=55.5 and i<=150.4:
       BP_low=55.5
-      BP_high=125.4
+      BP_high=150.4
       AQI_low=151
       AQI_high=200
-  elif i>=125.5 and i<=225.4:
-      BP_low=125.5
-      BP_high=225.4
-      AQI_low=152
+  elif i>=150.5 and i<=250.4:
+      BP_low=150.5
+      BP_high=250.4
+      AQI_low=201
       AQI_high=300
-  elif i>=225.5 and i<=325.4:
-      BP_low=225.5
-      BP_high=325.4
+  elif i>=250.5 and i<=350.4:
+      BP_low=250.5 
+      BP_high=350.4
       AQI_low=301
-      AQI_high=500
+      AQI_high=400
+  elif i>=350.5 and i<=500.4:
+      BP_low=350.5
+      BP_high=500.4
+      AQI_low=401
+      AQI_high=500   
+  else:
+    aqi.append(None)    
+    continue
+
   AQI=((AQI_high-AQI_low)*(i-BP_low))/(BP_high-BP_low)+AQI_low
   aqi.append(AQI)
 
 #creating future timestamps
-future_timestamps = pd.date_range(start=last_timestamp + pd.Timedelta(hours=1),periods=len(y_test),freq='H')
+future_timestamps = pd.date_range(start=last_timestamp + pd.Timedelta(hours=1),
+                                  periods=len(y_test),
+                                  freq='H')
 
 # Save predictions, calculations & features
 prediction_df = pd.DataFrame({"timestamp": future_timestamps,"actual":y_test.values,'predicted_pm2_5':xgb_preds,"calculated_aqi":aqi})
@@ -147,4 +159,5 @@ model = mr.python.create_model(
     description="PM2.5 predictions and Calculated AQI"
 )
 model.save(os.path.abspath(model_dir))
+
 print("Model, predictions, features, and metrics uploaded to registry.")
