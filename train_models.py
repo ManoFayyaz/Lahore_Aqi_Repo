@@ -27,7 +27,7 @@ df.dropna(axis=1, how='all', inplace=True)
 
 # print(df.shape)
 
-# last_timestamp = df['timestamp'].max()
+last_timestamp = df['timestamp'].max()
 
 df['pm2_5_lag1'] = df['pm2_5'].shift(1)
 df['pm2_5_lag2'] = df['pm2_5'].shift(2)
