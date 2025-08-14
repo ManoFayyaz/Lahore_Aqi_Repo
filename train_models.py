@@ -34,7 +34,7 @@ df['pm2_5_lag2'] = df['pm2_5'].shift(2)
 df['pm2_5_avg3'] = df['pm2_5'].rolling(window=3).mean()
 df['pm2_5_avg7'] = df['pm2_5'].rolling(window=7).mean()
 df['pm2_5_std7'] = df['pm2_5'].rolling(window=7).std()
-df['pm2_5_max'] = df['pm2_5'].rolling(window=7).max()
+# df['pm2_5_max'] = df['pm2_5'].rolling(window=7).max()
 
 # date features
 df['month'] = df['timestamp'].dt.month
@@ -47,7 +47,7 @@ train_df = df.iloc[:-72].copy()
 test_df = df.iloc[-72:].copy()
 
 # Define features/target
-features = ['temperature','no2','co','no','o3','humidity','pm2_5_lag1','pm2_5_lag2','pm2_5_avg3','pm2_5_avg7','pm2_5_std7','pm2_5_max','month']
+features = ['temperature','no2','co','no','o3','humidity','pm2_5_lag1','pm2_5_lag2','pm2_5_avg3','pm2_5_avg7','pm2_5_std7','month']
 target = 'pm2_5'
 
 X_train = train_df[features]
@@ -66,13 +66,13 @@ xgb_preds = xgb_model.predict(X_test)
 # print("X_train:", X_train.shape, "X_test:", X_test.shape)
 # print("y_train:", y_train.shape, "y_test:", y_test.shape)
 
-
 # Evaluate Final Test Set
 mse = mean_squared_error(y_test, xgb_preds)
 mae = mean_absolute_error(y_test, xgb_preds)
 r2 = r2_score(y_test, xgb_preds)
 rmse=np.sqrt(mse)
 mape = np.mean(np.abs((y_test - xgb_preds) / y_test)) * 100
+adj_r2=1-(1-r2)*(len(y_test)-1)/(len(y_test)-X_test.shape[1]-1)
 
 # print("MSE :", mse)
 # print("MAE :", mae)
