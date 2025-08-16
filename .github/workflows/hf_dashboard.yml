@@ -1,0 +1,30 @@
+name: Restart Hugging Face Space every 3 hours
+
+on:
+  schedule:
+    - cron: "0 */3 * * *"   # Every 3 hours
+  workflow_dispatch:
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Restart Space
+        run: |
+          pip install huggingface_hub
+          python - <<EOF
+          from huggingface_hub import HfApi
+          import os
+
+          api = HfApi()
+          api.restart_space(
+              repo_id="Mehnoor00/Lahore-AQI-Predictions",
+              token="${{ secrets.HF_TOKEN }}"
+          )
+          print("Hugging Face Space restarted")
+          EOF
