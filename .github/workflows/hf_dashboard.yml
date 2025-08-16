@@ -1,4 +1,4 @@
-name: Restart Hugging Face Space every 3 hours
+name: Restart Hugging Face Space
 
 on:
   schedule:
