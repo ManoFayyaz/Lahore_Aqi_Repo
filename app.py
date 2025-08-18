@@ -52,7 +52,8 @@ def alert_dataframe():
     df = pd.read_csv(predictions_path)
     daily_max = [df["predicted_pm2_5"][i*24:(i+1)*24].max() for i in range(3)]
     days = [(datetime.today() + timedelta(days=i+1)).strftime("%Y-%m-%d") for i in range(3)] 
-    alerts = [] for date, value in zip(days, daily_max):
+    alerts = [] 
+    for date, value in zip(days, daily_max):
         if value >=0 and value<=50: 
             level ="Good" 
         elif value >=51 and value<=100: 
@@ -95,10 +96,10 @@ with gr.Blocks() as dashboard:
             with gr.Column(): 
                 gr.Dataframe(value=alert_dataframe(), headers=["Date", "Max PM2.5", "Forecast"], interactive=False)
                 
-         gr.Markdown("\n<h1>Calculated AQI through US EPA</h1>\n")  
+        gr.Markdown("\n<h1>Calculated AQI through US EPA</h1>\n")  
         with gr.Row(): 
             with gr.Column(): 
-            gr.Plot(value=prediction_line_chart(),label="Hourly Forecast AQI")
+                gr.Plot(value=prediction_line_chart(),label="Hourly Forecast AQI")
             
         gr.Markdown("<h2>Maximum AQI </h2>") 
         with gr.Row(): 
