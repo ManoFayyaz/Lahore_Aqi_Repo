@@ -1,3 +1,15 @@
+---
+title: Lahore AQI Predictions
+emoji: 🌍
+colorFrom: green
+colorTo: blue
+sdk: gradio
+sdk_version: "4.31.4"
+app_file: app.py
+pinned: false
+---
+
+
 Final Project Report
 	Project Overview
 The project overview was to predict Air Quality Index of Lahore for the next 3 days and display the final predictions in a descriptive dashboard.
