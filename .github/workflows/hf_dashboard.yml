@@ -1,3 +1,33 @@
+# name: Restart Hugging Face Space
+
+# on:
+#   schedule:
+#     - cron: "0 */3 * * *"   # Every 3 hours
+#   workflow_dispatch:
+
+# jobs:
+#   restart:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: "3.10"
+
+#       - name: Restart Space
+#         run: |
+#           pip install huggingface_hub
+#           python - <<EOF
+#           from huggingface_hub import HfApi
+#           import os
+
+#           api = HfApi()
+#           api.restart_space(
+#               repo_id="Mehnoor00/Lahore-AQI-Predictions",
+#               token="${{ secrets.HF_TOKEN }}"
+#           )
+#           print("Hugging Face Space restarted")
+#           EOF
 name: Restart Hugging Face Space
 
 on:
@@ -9,22 +39,17 @@ jobs:
   restart:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Restart Space
+      - name: Make dummy commit
         run: |
-          pip install huggingface_hub
-          python - <<EOF
-          from huggingface_hub import HfApi
-          import os
+          echo "Last restart: $(date)" > last_restart.txt
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add last_restart.txt
+          git commit -m "Auto restart at $(date)" || echo "No changes to commit"
 
-          api = HfApi()
-          api.restart_space(
-              repo_id="Mehnoor00/Lahore-AQI-Predictions",
-              token="${{ secrets.HF_TOKEN }}"
-          )
-          print("Hugging Face Space restarted")
-          EOF
+      - name: Push to Hugging Face
+        run: |
+          git push https://Mehnoor00:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/Mehnoor00/Lahore-AQI-Predictions main
