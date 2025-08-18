@@ -38,7 +38,8 @@ def pm2_5_line_chart():
     df = pd.read_csv(predictions_path) 
     start_time = datetime.now() + timedelta(hours=1)
     timestamps = [start_time + timedelta(hours=i) for i in range(len(df))] 
-    df["timestamp"] = timestamps fig, ax = plt.subplots(figsize=(12, 4)) 
+    df["timestamp"] = timestamps 
+    fig, ax = plt.subplots(figsize=(12, 4)) 
     ax.plot(df["timestamp"], df['predicted_pm2_5'], marker='o', linestyle='-', color='blue') 
     ax.set_xlabel("Date") 
     ax.set_ylabel("Predicted PM2.5") 
@@ -72,7 +73,8 @@ def prediction_line_chart():
     df = pd.read_csv(predictions_path) 
     start_time = datetime.now() + timedelta(hours=1) 
     timestamps = [start_time + timedelta(hours=i) for i in range(len(df))] 
-    df["timestamp"] = timestamps fig, ax = plt.subplots(figsize=(12, 4)) 
+    df["timestamp"] = timestamps 
+    fig, ax = plt.subplots(figsize=(12, 4)) 
     ax.plot(df["timestamp"], df["calculated_aqi"], marker='o', linestyle='-', color='blue') 
     ax.set_xlabel("Date") 
     ax.set_ylabel("Calculated AQI") 
