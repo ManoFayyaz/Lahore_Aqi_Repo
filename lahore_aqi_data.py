@@ -55,4 +55,4 @@ with open(csv_path, mode='a', newline='') as file:
     
     writer.writerow(record)
 
-print("✅ Combined AQI and pollutant data saved.")
+print("Combined AQI and pollutant data saved.")
