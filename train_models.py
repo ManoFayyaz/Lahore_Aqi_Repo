@@ -88,37 +88,37 @@ AQI_low=None
 aqi=[]
 
 for i in xgb_preds:
-  if i>=0.0 and i<= 12.0:
+  if i>0.0 and i<= 12.0:
       BP_low=0.0
       BP_high=12.0
       AQI_low=0
       AQI_high=50
-  elif i>=12.1 and i<=35.4:
+  elif i>12.0 and i<=35.4:
       BP_low=12.1
       BP_high=35.4
       AQI_low=51
       AQI_high=100
-  elif i>=35.5 and i<=55.4:
+  elif i>35.4 and i<=55.4:
       BP_low=35.5
       BP_high=55.4
       AQI_low=101
       AQI_high=150
-  elif i>=55.5 and i<=150.4:
+  elif i>55.4 and i<=150.4:
       BP_low=55.5
       BP_high=150.4
       AQI_low=151
       AQI_high=200
-  elif i>=150.5 and i<=250.4:
+  elif i>150.4 and i<=250.4:
       BP_low=150.5
       BP_high=250.4
       AQI_low=201
       AQI_high=300
-  elif i>=250.5 and i<=350.4:
+  elif i>250.4 and i<=350.4:
       BP_low=250.5 
       BP_high=350.4
       AQI_low=301
       AQI_high=400
-  elif i>=350.5 and i<=500.4:
+  elif i>350.4 and i<=500.4:
       BP_low=350.5
       BP_high=500.4
       AQI_low=401
