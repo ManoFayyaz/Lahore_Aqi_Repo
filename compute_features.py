@@ -16,4 +16,4 @@ df['target_aqi'] = df['aqius'].shift(-1)
 # Save to new CSV
 df.to_csv("lahore_aqi_features.csv", index=False)
 
-print("✅ Features saved to lahore_aqi_features.csv!")
+print(" Features saved to lahore_aqi_features.csv!")
