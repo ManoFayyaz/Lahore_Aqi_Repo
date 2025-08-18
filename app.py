@@ -1,8 +1,8 @@
 import gradio as gr 
 import pandas as pd 
 import matplotlib.pyplot as plt 
-import hopsworks from datetime 
-import datetime, timedelta, timezone 
+import hopsworks 
+from datetime import datetime, timedelta, timezone 
 import numpy as np 
 #Connect to Hopsworks 
 project = hopsworks.login( api_key_value="RI6aVh8JRlgiuVaz.bGgoZw1u0Lf54YkBoZyivKakNFHWMHcQE3z5hCk4GOpTbHKf7jHLol2cXmSfZSMC", project="Lahore_aqi" )
