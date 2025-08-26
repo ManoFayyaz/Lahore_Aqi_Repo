@@ -21,11 +21,11 @@ The code that worked; I transferred it from my notebook and put it in python fil
 
 
 ***Dashboard includes:***
- 	Next 3 days maximum pm2.5 prediction in a data frame.
+ 	Next 3 days maximum AQI prediction in a data frame.
  	Data frame for alerts like Good, Moderate, Unhealthy and Hazardous AQI.
  	Hourly pm2.5 prediction of next 72 hours in a line chart.
  	Hourly AQI calculated of next 72 hours in a line chart.
- 	Data frame for hourly pm2.5 and calculated AQI prediction for readability.
+ 	Next 3 days maximum pm2.5 in a bar chart.
   
 Kindly examine the dashboard available on this link:
 https://huggingface.co/spaces/Mehnoor00/Lahore-AQI-Predictions
