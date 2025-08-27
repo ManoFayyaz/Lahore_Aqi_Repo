@@ -15,7 +15,7 @@ pinned: false
   
 ***The working code is in other files for ci/cd pipeline to work.***
 
-I did not know how to upload jupyter notebook file so I uploaded it directky from my pc and it does not show content on this. That is why I request you to download it before evaluation of my whole progress; code basically. When downloaded, you will be able to see all the EDA and Model Training code.
+I did not know how to upload jupyter notebook file so I uploaded it directly from my pc and it does not show content on this. That is why I request you to download it before evaluation of my whole progress; code basically. When downloaded, you will be able to see all the EDA and Model Training code.
 
 The code that worked; I transferred it from my notebook and put it in python files in github repo to create a ci/cd workflow for the first time.
 
