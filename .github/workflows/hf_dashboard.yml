@@ -44,12 +44,13 @@ jobs:
         with:
           fetch-depth: 0 
 
-      - name: Remove binary file (PPTX)
+      - name: Install git-filter-repo
         run: |
-          git rm -f --cached Predicting-Lahores-Air-Quality.pptx || echo "No PPTX found"
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git commit -m "Remove PPTX file before push" || echo "No changes to commit"    
+          pip install git-filter-repo
+
+      - name: Remove PPTX from history
+        run: |
+          git filter-repo --path Predicting-Lahores-Air-Quality.pptx --invert-paths --force  
           
       - name: Make dummy commit
         run: |
