@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 
 # === API CONFIGURATION ===
-IQAIR_API_KEY =os.getenv("IQAIR_API_KEY1")
+IQAIR_API_KEY =os.getenv("IQAIR_API_KEY")
 OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
 LAT, LON = "31.5497", "74.3436"
 
