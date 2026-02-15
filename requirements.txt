@@ -3,7 +3,6 @@ requests
 hopsworks
 pyarrow
 confluent-kafka
-hopsworks==4.2.6
 scikit-learn
 numpy
 tensorflow
